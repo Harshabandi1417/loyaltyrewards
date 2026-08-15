@@ -1,0 +1,203 @@
+<mvc:View
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    controllerName="com.loyaltyrewards.app.controller.CustomerDetails">
+
+    <Page
+        title="Customer Details"
+        showNavButton="true"
+        navButtonPress=".onNavBack">
+
+        <content>
+
+            <VBox class="sapUiMediumMargin">
+
+                <Title
+                    text="{customer>/name}"
+                    level="H2"
+                    class="sapUiSmallMarginBottom" />
+
+                <ObjectStatus
+                    title="Email"
+                    text="{customer>/email}"
+                    class="sapUiSmallMarginBottom" />
+
+                <ObjectNumber
+                    number="{customer>/points}"
+                    unit="Points"
+                    emphasized="true"
+                    class="sapUiSmallMarginBottom" />
+
+                <ObjectStatus
+                title="Tier"
+                text="{customer>/tier}"
+                state="Success"
+                class="sapUiSmallMarginBottom" />
+
+            <Toolbar class="sapUiSmallMarginTop">
+                <ToolbarSpacer />
+
+                <Button
+                    text="Edit Customer"
+                    icon="sap-icon://edit"
+                    press=".onEditCustomer"
+                    class="sapUiTinyMarginEnd" />
+
+                <Button
+                    text="Record Purchase"
+                    type="Emphasized"
+                    icon="sap-icon://cart"
+                    press=".onRecordPurchase"
+                    class="sapUiTinyMarginEnd" />
+
+                <Button
+                    text="Add Points"
+                    icon="sap-icon://add"
+                    press=".onAddPoints"
+                    class="sapUiTinyMarginEnd" />
+
+                <Button
+                    text="Redeem Points"
+                    icon="sap-icon://less"
+                    press=".onRedeemPoints"
+                    class="sapUiTinyMarginEnd" />
+
+                <Button
+                    text="Delete Customer"
+                    icon="sap-icon://delete"
+                    type="Reject"
+                    press=".onDeleteCustomer" />
+            </Toolbar>
+
+            <Title
+                text="Transaction History"
+                level="H3"
+                class="sapUiMediumMarginTop sapUiSmallMarginBottom" />
+
+            <HBox
+                justifyContent="SpaceBetween"
+                class="sapUiSmallMarginTop sapUiSmallMarginBottom">
+
+                <ObjectNumber
+                    number="{transactionSummary>/count}"
+                    unit="Transactions" />
+
+                <ObjectNumber
+                    number="{transactionSummary>/earned}"
+                    unit="Points Earned"
+                    state="Success" />
+
+            </HBox>
+
+            <Table
+                id="transactionsTable"
+                items="{transactions>/}"
+                growing="true"
+                growingThreshold="10"
+                noDataText="No transactions yet">
+
+                <columns>
+                    <Column>
+                        <Text text="Channel" />
+                    </Column>
+
+                    <Column hAlign="End">
+                        <Text
+                            text="Amount"
+                            textAlign="End" />
+                    </Column>
+
+                    <Column hAlign="End">
+                        <Text
+                            text="Points Earned"
+                            textAlign="End" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Date" />
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{transactions>channel}" />
+
+                            <ObjectNumber
+                                number="{transactions>amount}"
+                                unit="₹" />
+
+                            <ObjectNumber
+                                number="{
+                                    path: 'transactions>pointsEarned',
+                                    formatter: '.formatTransactionPoints'
+                                }"
+                                unit="Points"
+                                state="Success" />
+
+                            <Text
+                                text="{
+                                    path: 'transactions>transactionDate',
+                                    formatter: '.formatTransactionDate'
+                                }" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+            <Title
+                text="Redemption History"
+                level="H3"
+                class="sapUiMediumMarginTop sapUiSmallMarginBottom" />
+
+            <Table
+                id="redemptionsTable"
+                items="{redemptions>/}"
+                growing="true"
+                growingThreshold="10"
+                noDataText="No redemptions yet">
+
+                <columns>
+                    <Column hAlign="End">
+                        <Text
+                            text="Points Used"
+                            textAlign="End" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Date" />
+                    </Column>
+
+                    <Column>
+                        <Text text="Remarks" />
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <ObjectNumber
+                                number="{redemptions>pointsUsed}"
+                                unit="Points"
+                                state="Error" />
+
+                            <Text
+                                text="{
+                                    path: 'redemptions>redemptionDate',
+                                    formatter: '.formatTransactionDate'
+                                }" />
+
+                            <Text
+                                text="{redemptions>remarks}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+
+        </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

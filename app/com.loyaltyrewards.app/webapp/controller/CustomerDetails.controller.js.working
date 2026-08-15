@@ -1,0 +1,182 @@
+sap.ui.define([
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/m/Dialog",
+    "sap/m/Label",
+    "sap/m/Input",
+    "sap/m/Button",
+    "sap/m/MessageToast"
+], function (
+    Controller,
+    JSONModel,
+    Dialog,
+    Label,
+    Input,
+    Button,
+    MessageToast
+) {
+    "use strict";
+
+    return Controller.extend(
+        "com.loyaltyrewards.app.controller.CustomerDetails",
+        {
+
+            onInit: function () {
+                this.getOwnerComponent()
+                    .getRouter()
+                    .getRoute("customerDetails")
+                    .attachPatternMatched(
+                        this._onRouteMatched,
+                        this
+                    );
+            },
+
+            _onRouteMatched: function (oEvent) {
+                const sCustomerId =
+                    oEvent.getParameter("arguments").customerId;
+
+                fetch(
+                    "/odata/v4/loyalty-rewards/Customers(" +
+                    sCustomerId +
+                    ")"
+                )
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error(
+                                "HTTP " + response.status
+                            );
+                        }
+
+                        return response.json();
+                    })
+                    .then(function (oCustomer) {
+                        this.getView().setModel(
+                            new JSONModel(oCustomer),
+                            "customer"
+                        );
+                    }.bind(this))
+                    .catch(function (error) {
+                        console.error(
+                            "Failed to load customer:",
+                            error
+                        );
+                    });
+            },
+
+            onNavBack: function () {
+                this.getOwnerComponent()
+                    .getRouter()
+                    .navTo("main");
+            },
+
+            onAddPoints: function () {
+            const oController = this;
+
+            const oInput = new Input({
+                type: "Number",
+                placeholder: "Enter points",
+                width: "100%"
+            });
+
+            const oDialog = new Dialog({
+                title: "Add Loyalty Points",
+                contentWidth: "25rem",
+                content: [
+                    new Label({
+                        text: "Points",
+                        labelFor: oInput
+                    }),
+                    oInput
+                ],
+                beginButton: new Button({
+                    text: "Add",
+                    type: "Emphasized",
+                    press: function () {
+                        const iPoints = Number(oInput.getValue());
+
+                        if (
+                            !Number.isInteger(iPoints) ||
+                            iPoints <= 0
+                        ) {
+                            MessageToast.show(
+                                "Enter a valid positive number"
+                            );
+                            return;
+                        }
+
+                        const oCustomer = oController
+                            .getView()
+                            .getModel("customer")
+                            .getData();
+
+                        fetch("/odata/v4/loyalty-rewards/addPoints", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                ID: oCustomer.ID,
+                                points: iPoints
+                            })
+                        })
+                            .then(function (oResponse) {
+                                if (!oResponse.ok) {
+                                    return oResponse.json().then(function (oError) {
+                                        throw new Error(
+                                            oError.error?.message ||
+                                            "Failed to add points"
+                                        );
+                                    });
+                                }
+
+                                return oResponse.json();
+                            })
+                            .then(function (oResult) {
+                                oCustomer.points = oResult.value;
+
+                                oController
+                                    .getView()
+                                    .getModel("customer")
+                                    .setData(oCustomer);
+
+                                MessageToast.show(
+                                    "Points added successfully"
+                                );
+
+                                oDialog.close();
+                            })
+                            .catch(function (oError) {
+                                console.error(
+                                    "Add Points failed:",
+                                    oError
+                                );
+
+                                MessageToast.show(
+                                    "Could not add points"
+                                );
+                            });
+                    }
+                }),
+                endButton: new Button({
+                    text: "Cancel",
+                    press: function () {
+                        oDialog.close();
+                    }
+                }),
+                afterClose: function () {
+                    oDialog.destroy();
+                }
+            });
+
+            oDialog.open();
+        },
+
+        onRedeemPoints: function () {
+                MessageToast.show(
+                    "Redeem Points will be implemented next."
+                );
+            }
+
+        }
+    );
+});

@@ -1,0 +1,126 @@
+<mvc:View
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    controllerName="com.loyaltyrewards.app.controller.Main"
+    displayBlock="true">
+
+    <Page title="Loyalty Rewards">
+
+        <content>
+
+            <VBox class="sapUiMediumMargin">
+
+                <HBox
+                    wrap="Wrap"
+                    justifyContent="SpaceBetween"
+                    class="sapUiSmallMarginBottom">
+
+                    <GenericTile
+                        header="Total Customers"
+                        subheader="Registered customers"
+                        class="sapUiTinyMargin" width="18rem">
+                        <TileContent>
+                            <NumericContent
+                                value="{/Dashboard/totalCustomers}"
+                                icon="sap-icon://customer" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Total Points"
+                        subheader="Points across all customers"
+                        class="sapUiTinyMargin" width="18rem">
+                        <TileContent>
+                            <NumericContent
+                                value="{/Dashboard/totalPoints}"
+                                icon="sap-icon://favorite" />
+                        </TileContent>
+                    </GenericTile>
+
+                    <GenericTile
+                        header="Top Customer"
+                        subheader="{/Dashboard/topCustomer}"
+                        class="sapUiTinyMargin" width="18rem">
+                        <TileContent>
+                            <NumericContent
+                                value="{/Dashboard/topPoints}"
+                                icon="sap-icon://trophy" />
+                        </TileContent>
+                    </GenericTile>
+
+                </HBox>
+
+                <Panel
+                    headerText="Customers"
+                    class="sapUiSmallMarginTop">
+
+                    <Table
+                        id="customersTable"
+                        items="{/Customers}"
+                        growing="true"
+                        growingScrollToLoad="true"
+                        inset="false">
+
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title text="Customer List" />
+
+                                <ToolbarSpacer />
+
+                                <Button
+                                    text="Add Customer"
+                                    type="Emphasized"
+                                    icon="sap-icon://add"
+                                    press=".onAddCustomer"
+                                    class="sapUiTinyMarginEnd" />
+
+                                <SearchField
+                                    id="customerSearch"
+                                    width="18rem"
+                                    placeholder="Search customers..."
+                                    liveChange=".onSearch"
+                                    class="sapUiTinyMarginBegin" />
+                            </Toolbar>
+                        </headerToolbar>
+
+                        <columns>
+                            <Column>
+                                <Text text="Name" />
+                            </Column>
+
+                            <Column>
+                                <Text text="Email" />
+                            </Column>
+
+                            <Column hAlign="End">
+                                <Text
+                                    text="Points"
+                                    textAlign="End" />
+                            </Column>
+                        </columns>
+
+                        <items>
+                            <ColumnListItem
+                                type="Navigation"
+                                press=".onCustomerPress">
+                                <cells>
+                                    <Text text="{name}" />
+                                    <Text text="{email}" />
+                                    <ObjectNumber
+                                        number="{points}"
+                                        unit="Points" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+
+                    </Table>
+
+                </Panel>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

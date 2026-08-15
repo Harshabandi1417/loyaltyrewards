@@ -1,0 +1,109 @@
+{
+    "_version": "1.21.0",
+    "sap.app": {
+        "id": "com.loyaltyrewards.app",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "applicationVersion": {
+            "version": "${version}"
+        },
+        "sourceTemplate": {
+            "id": "generator-ui5-app",
+            "version": "1.1.0"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/odata/v4/loyalty-rewards/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {},
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "com.loyaltyrewards.app.view.App",
+            "type": "XML",
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.151.0",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {}
+            }
+        },
+        "handleValidation": true,
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.loyaltyrewards.app.i18n.i18n",
+                    "supportedLocales": [
+                        "en",
+                        "de"
+                    ],
+                    "fallbackLocale": "en",
+                    "async": true
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            }
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "type": "View",
+                "viewType": "XML",
+                "path": "com.loyaltyrewards.app.view",
+                "controlId": "app",
+                "controlAggregation": "pages"
+            },
+            "routes": [
+                {
+                    "pattern": "",
+                    "name": "main",
+                    "target": "main"
+                },
+                {
+                    "pattern": "customer/{customerId}",
+                    "name": "customerDetails",
+                    "target": "customerDetails"
+                }
+            ],
+            "targets": {
+                "main": {
+                    "id": "main",
+                    "name": "Main"
+                },
+                "customerDetails": {
+                    "id": "customerDetails",
+                    "name": "CustomerDetails"
+                }
+            }
+        }
+    }
+}
