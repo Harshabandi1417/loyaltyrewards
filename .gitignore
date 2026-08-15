@@ -1,0 +1,29 @@
+node_modules/
+gen/
+mta_archives/
+mta-op-*/
+.loyaltyrewards_mta_build_tmp/
+
+# Local databases
+db.sqlite
+db.sqlite.*
+*.sqlite
+*.sqlite-*
+*.db
+
+# Local/runtime files
+default-env.json
+start-hana.json
+.env
+.env.*
+*.log
+*.mtar
+
+# Backups / temporary copies
+*.tar.gz
+*.backup
+*.before-*
+*working-backup*
+
+# IDE settings
+.vscode/
