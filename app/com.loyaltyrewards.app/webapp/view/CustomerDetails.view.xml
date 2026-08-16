@@ -31,7 +31,7 @@
                 <ObjectStatus
                 title="Tier"
                 text="{customer>/tier}"
-                state="Success"
+                state="{= ${customer>/tier} === 'Gold' ? 'Success' : ${customer>/tier} === 'Silver' ? 'Warning' : ${customer>/tier} === 'Bronze' ? 'Information' : 'None' }"
                 class="sapUiSmallMarginBottom" />
 
             <Toolbar class="sapUiSmallMarginTop">
